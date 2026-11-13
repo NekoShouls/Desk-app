@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="theme-color" content="#000000">
+  <title>Grok Bot</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <div id="error-banner" hidden></div>
+
+    <header class="navbar" id="navbar">
+      <button class="nav-btn avatar" id="btn-avatar" aria-label="Account">
+        <span>N</span>
+      </button>
+      <button class="brand" id="btn-brand">Grok Bot ›</button>
+      <button class="nav-btn" id="btn-search" aria-label="Search">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 16l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button class="nav-btn bell" id="btn-bell" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 13 6 9z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 18.5a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="dot" id="bell-dot" hidden></span>
+      </button>
+    </header>
+
+    <div id="search-sheet" hidden>
+      <div class="search-bar">
+        <input id="search-input" type="search" placeholder="Name, symbol or mint" enterkeyhint="search">
+        <button id="search-close" class="text-btn">Cancel</button>
+      </div>
+      <div id="search-results"></div>
+    </div>
+
+    <main id="screens">
+      <section id="screen-home" class="screen" data-screen="home"></section>
+      <section id="screen-agents" class="screen" data-screen="agents" hidden></section>
+      <section id="screen-activity" class="screen" data-screen="activity" hidden></section>
+      <section id="screen-account" class="screen" data-screen="account" hidden></section>
+      <section id="screen-coin" class="screen" data-screen="coin" hidden></section>
+      <section id="screen-auditor" class="screen" data-screen="auditor" hidden></section>
+    </main>
+
+    <nav class="tabbar" id="tabbar">
+      <button data-tab="home" class="active"><span class="ico">⌂</span>Home</button>
+      <button data-tab="agents"><span class="ico">◎</span>Agents</button>
+      <button data-tab="activity"><span class="ico">≡</span>Activity</button>
+      <button data-tab="account"><span class="ico">●</span>Account</button>
+    </nav>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
