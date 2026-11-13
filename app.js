@@ -549,17 +549,21 @@
         <h3>Account</h3>
         <div class="row"><div class="left">Mode</div><div class="right">${escapeHtml(mode)}</div></div>
         <div class="row"><div class="left">Stack</div><div class="right num">${money(stack)}</div></div>
-        <a class="row" href="${escapeHtml(profile)}" id="fomo-profile">
+        ${venue() === "axiom"
+          ? `<a class="row" href="${escapeHtml(profile)}" id="venue-profile">
+          <div class="left">Ton portfolio Axiom</div><div class="right">Ouvrir</div>
+        </a>`
+          : `<a class="row" href="${escapeHtml(profile)}" id="fomo-profile">
           <div class="left">Your FOMO profile</div><div class="right">@${escapeHtml(handle)}</div>
         </a>
-        <button class="row" id="invite-row"><div class="left">Invite a friend</div><div class="right">Share</div></button>
+        <button class="row" id="invite-row"><div class="left">Invite a friend</div><div class="right">Share</div></button>`}
         <div class="row"><div class="left">Notifier</div><div class="right">${escapeHtml(acc.notifierStatus || acc.notifier || "—")}</div></div>
       </div>
       ${groupsHtml}
       <div class="empty-note">${escapeHtml(acc.commandsHint || "Settings change via Grok Bot chat commands (python -m desk.cli).")}</div>
     `;
     const invite = root.querySelector("#invite-row");
-    invite.addEventListener("click", () => inviteFriend(signup));
+    if (invite) invite.addEventListener("click", () => inviteFriend(signup));
   }
   function fmtSetting(v) {
     if (v == null) return "—";
@@ -701,8 +705,8 @@
         <div class="value-row"><span>Timeout</span><span class="v num">${countdown(pos.timeoutLeftS)}</span></div>
       </div>` : "";
     const btn = pos
-      ? `<a class="fomo-btn" href="${escapeHtml(coin.link || pos.link)}">Sell on FOMO</a>`
-      : `<a class="fomo-btn" href="${escapeHtml(coin.link || "#")}">Buy on FOMO</a>`;
+      ? `<a class="fomo-btn" href="${escapeHtml(coin.link || pos.link)}">${venueLabel("sell")}</a>`
+      : `<a class="fomo-btn" href="${escapeHtml(coin.link || "#")}">${venueLabel("buy")}</a>`;
     root.innerHTML = `
       <div class="screen-pad">
         <div class="eyebrow">${escapeHtml(coin.name || "")} · Solana · ${escapeHtml(age)} ${shield} ${paper}</div>
@@ -767,7 +771,7 @@
           <span>Take apart before buying</span>
           <div class="switch ${enabled?"on":""} locked" aria-disabled="true"><i></i></div>
         </div>
-        <a class="fomo-btn" href="${escapeHtml(audit.link || "#")}">Open on FOMO</a>
+        <a class="fomo-btn" href="${escapeHtml(audit.link || "#")}">${venueLabel("open")}</a>
       </div>`;
     runBeam(root, layers, reduced);
   }
@@ -840,7 +844,27 @@
       </button>`).join("") || `<div class="empty-note">No matches</div>`;
   }
 
+  // Which desk this data path belongs to: "axiom" (desk-axiom) or "fomo" (default, older state files).
+  function venue() {
+    const v = (state && state.venue) || (account && account.venue) || "fomo";
+    return String(v).toLowerCase() === "axiom" ? "axiom" : "fomo";
+  }
+  function venueLabel(kind) {
+    if (venue() === "axiom") {
+      return { buy: "Acheter sur Axiom", sell: "Vendre sur Axiom", open: "Ouvrir sur Axiom" }[kind];
+    }
+    return { buy: "Buy on FOMO", sell: "Sell on FOMO", open: "Open on FOMO" }[kind];
+  }
+  function applyDeskBadge() {
+    const name = venue() === "axiom" ? "Axiom" : "FOMO";
+    const text = `Grok Bot · ${name} ›`;
+    if (els.brand && els.brand.textContent !== text) els.brand.textContent = text;
+    const title = `Grok Bot · ${name}`;
+    if (document.title !== title) document.title = title;
+  }
+
   function render() {
+    applyDeskBadge();
     if (els.bellDot) els.bellDot.hidden = !(state && state.unreadPushes);
     const { screen, id } = route;
     if (screen === "agents") { showScreen("agents"); renderAgents(); }
